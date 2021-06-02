@@ -42,7 +42,13 @@ export default class SelectOption extends React.PureComponent {
   }
 
   get labelName() {
-    return (this.props.children || '').toString()
+    return this.parent().getIntLabel(this.props.children)
+  }
+
+  get child() {
+    const count = React.Children.count(this.props.children)
+    if (count > 1) return ''
+    return this.props.children
   }
 
   isEqual(a, b) {
@@ -139,10 +145,10 @@ export default class SelectOption extends React.PureComponent {
       defaultMethod(query, this.getLabel())
     } else {
       const visible = defaultMethod(query, this.getLabel())
-
       this.setState({ visible })
     }
   }
+
   getLabel() {
     return (
       this.labelName ||
@@ -154,7 +160,7 @@ export default class SelectOption extends React.PureComponent {
   }
 
   render() {
-    const { disabled, className, children, ...others } = this.props
+    const { disabled, className, ...others } = this.props
     const { active } = this.state
     const { visible } = this.state
     const displayStyle = visible ? {} : { display: 'none' }
@@ -171,7 +177,7 @@ export default class SelectOption extends React.PureComponent {
         className={classnames('select-option', { active, disabled }, className)}
         onClick={this.optionClickHandle}
       >
-        {children}
+        {this.child}
       </li>
     )
   }
